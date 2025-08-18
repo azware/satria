@@ -1,0 +1,206 @@
+/* =================================================================
+   1. GLOBAL & TYPOGRAPHY STYLES
+   ================================================================= */
+:root {
+    --bs-primary: #4a69bd;
+    --bs-info: #3c91e6;
+    --bs-light: #f8f9fa;
+    --bs-dark: #343a40;
+    --bs-body-font-family: 'Inter', sans-serif;
+    --bs-body-bg: #f8f9fa;
+    --bs-body-color: #495057;
+    --bs-border-color: #e9ecef; /* [DIHALUSKAN] Border lebih lembut */
+    --bs-border-radius: 0.375rem;
+    --sidebar-width: 250px;
+    --sidebar-width-mini: 80px;
+}
+
+body {
+    background-color: var(--bs-body-bg);
+    font-family: var(--bs-body-font-family);
+    color: var(--bs-body-color);
+    font-size: 14.5px; /* [DIHALUSKAN] Sedikit lebih kecil untuk kesan clean */
+    line-height: 1.6; /* [DIHALUSKAN] Jarak antar baris lebih nyaman */
+    overflow-x: hidden;
+}
+
+/* [DIHALUSKAN] Ukuran heading disesuaikan agar tidak terlalu dominan */
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.5rem; }
+h1, h2, h3, h4, h5, h6 { font-weight: 600; color: var(--bs-dark); }
+.wrapper { display: flex; width: 100%; align-items: stretch; }
+
+/* =================================================================
+   2. SIDEBAR
+   ================================================================= */
+#sidebar {
+    min-width: var(--sidebar-width);
+    max-width: var(--sidebar-width);
+    background: #ffffff;
+    transition: all 0.3s ease;
+    border-right: 1px solid var(--bs-border-color);
+    position: relative;
+    z-index: 1000;
+}
+#sidebar.active {
+    min-width: var(--sidebar-width-mini);
+    max-width: var(--sidebar-width-mini);
+    text-align: center;
+}
+
+#sidebar .sidebar-header {
+    padding: 18px 20px; /* [DIHALUSKAN] Padding sedikit disesuaikan */
+    background: #ffffff;
+    border-bottom: 1px solid var(--bs-border-color);
+    transition: all 0.3s ease;
+}
+#sidebar.active .sidebar-header h3 i { margin-right: 0; }
+#sidebar .sidebar-header h3 { color: var(--bs-primary); font-weight: 700; font-size: 1.25rem; }
+
+#sidebar ul li a {
+    padding: 10px 20px; /* [DIHALUSKAN] Padding vertikal dikurangi */
+    font-size: 0.95rem; /* [DIHALUSKAN] Teks menu lebih kecil */
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    color: #5a6a7a;
+    border-left: 4px solid transparent;
+    transition: all 0.2s ease-in-out;
+    white-space: nowrap;
+}
+#sidebar.active ul li a { padding: 12px 10px; justify-content: center; } /* [DIHALUSKAN] Padding disesuaikan */
+
+#sidebar .nav-link i {
+    font-size: 1.1rem; /* [DIHALUSKAN] Ikon sedikit lebih kecil */
+    width: 20px; /* Memberi lebar tetap agar rapi */
+    text-align: center;
+    margin-right: 15px; /* [DIHALUSKAN] Jarak disesuaikan */
+}
+#sidebar.active .nav-link i { margin-right: 0; }
+
+#sidebar ul li a:hover {
+    color: var(--bs-primary);
+    background: rgba(74, 105, 189, 0.05);
+    border-left-color: var(--bs-primary);
+    text-decoration: none;
+}
+#sidebar ul li.active > a {
+    color: var(--bs-primary);
+    background: rgba(74, 105, 189, 0.1);
+    border-left-color: var(--bs-primary);
+    font-weight: 600;
+}
+
+.sidebar-text {
+    opacity: 1;
+    transition: opacity 0.2s ease, margin-left 0.3s ease;
+}
+#sidebar.active .sidebar-text {
+    opacity: 0;
+    width: 0;
+    margin-left: -10px;
+    visibility: hidden;
+}
+
+
+/* =================================================================
+   3. MAIN CONTENT AREA
+   ================================================================= */
+#content {
+    width: calc(100% - var(--sidebar-width));
+    padding: 25px; /* [DIHALUSKAN] Padding lebih lega */
+    min-height: 100vh;
+    transition: all 0.3s ease;
+    position: relative;
+}
+#sidebar.active + #content {
+    width: calc(100% - var(--sidebar-width-mini));
+}
+
+#content .navbar {
+    background-color: #ffffff !important;
+    border-radius: var(--bs-border-radius);
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+}
+
+
+/* =================================================================
+   4. DASHBOARD STATISTIK BOX
+   ================================================================= */
+.small-box {
+    border-radius: var(--bs-border-radius);
+    position: relative;
+    display: block;
+    margin-bottom: 20px;
+    color: #fff;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.07);
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.small-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+.small-box > .inner { padding: 20px; }
+.small-box h3 {
+    font-size: 2rem; /* [DIHALUSKAN] Angka tidak terlalu besar */
+    font-weight: 700;
+    margin: 0 0 5px 0;
+}
+.small-box p { font-size: 0.95rem; } /* [DIHALUSKAN] Teks deskripsi lebih kecil */
+.small-box .icon {
+    position: absolute;
+    top: 20px; /* [DIHALUSKAN] Posisi disesuaikan */
+    right: 20px;
+    font-size: 60px; /* [DIHALUSKAN] Ikon latar belakang jauh lebih kecil */
+    color: rgba(0,0,0,0.15);
+    transition: all .3s linear;
+}
+.small-box:hover .icon { transform: scale(1.1); }
+.small-box > .small-box-footer {
+    display: block;
+    padding: 8px 0;
+    color: rgba(255,255,255,0.8);
+    background: rgba(0,0,0,0.1);
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+.small-box > .small-box-footer:hover {
+    color: #fff;
+    background: rgba(0,0,0,0.2);
+}
+.bg-info { background-color: var(--bs-info) !important; }
+
+/* =================================================================
+   Sisa Styles (Card, Table, Button, etc.) - Dengan sedikit penghalusan
+   ================================================================= */
+.card { border: none; border-radius: var(--bs-border-radius); box-shadow: 0 4px 25px rgba(0,0,0,0.07); margin-bottom: 1.5rem; }
+.card-header { background-color: #ffffff; border-bottom: 1px solid var(--bs-border-color); padding: 1rem 1.25rem; font-weight: 600; color: var(--bs-dark); }
+table.dataTable { border-collapse: collapse !important; }
+table.dataTable thead th { font-weight: 600; color: #999; /* [DIHALUSKAN] Header tabel lebih lembut */ text-transform: uppercase; font-size: 12px; border-bottom: 2px solid var(--bs-border-color); }
+table.dataTable tbody td { padding: 12px 10px !important; vertical-align: middle; }
+table.dataTable.no-footer { border-bottom: 1px solid var(--bs-border-color); }
+table.dataTable > tbody > tr > td { border: none; }
+.btn { font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--bs-border-radius); transition: all 0.2s ease; }
+.btn-primary { background-color: var(--bs-primary); border-color: var(--bs-primary); box-shadow: 0 2px 8px rgba(74, 105, 189, 0.3); }
+.modal-content { border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+
+
+/* =================================================================
+   RESPONSIVE DESIGN (Mobile & Tablet) - Tidak Berubah
+   ================================================================= */
+.sidebar-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.5); z-index: 999; display: none;
+}
+@media (max-width: 768px) {
+    #sidebar { position: absolute; left: calc(-1 * var(--sidebar-width)); height: 100vh; }
+    #sidebar.active { left: 0; min-width: var(--sidebar-width); max-width: var(--sidebar-width); text-align: left; }
+    #sidebar.active ul li a { justify-content: flex-start; }
+    #content { width: 100%; }
+    #sidebar.active + #content { width: 100%; }
+    #sidebar.active .sidebar-text { opacity: 1; width: auto; margin-left: 15px; visibility: visible; }
+    .sidebar-overlay { display: block; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+    #sidebar.active ~ .sidebar-overlay { opacity: 1; visibility: visible; }
+}
