@@ -1,4 +1,4 @@
-# SATRIA - Sistem Administrasi Tata Kepegawaian Terintegrasi
+# SATRIA - Sistem Informasi Tata Kepegawaian Terintegrasi
 
 **SATRIA** adalah aplikasi web modern yang dirancang untuk menjadi "ksatria digital" bagi departemen HR. Dibangun dengan filosofi *all-in-one*, SATRIA bertujuan untuk mengelola seluruh siklus hidup kepegawaian—dari rekrutmen hingga pensiun—dalam satu platform yang terintegrasi, efisien, dan aman.
 
