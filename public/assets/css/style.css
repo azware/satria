@@ -49,7 +49,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 600; color: var(--bs-dark); }
 }
 
 #sidebar .sidebar-header {
-    padding: 18px 20px; /* [DIHALUSKAN] Padding sedikit disesuaikan */
+    padding: 18px 20px; /* adding sedikit disesuaikan */
     background: #ffffff;
     border-bottom: 1px solid var(--bs-border-color);
     transition: all 0.3s ease;
@@ -58,8 +58,8 @@ h1, h2, h3, h4, h5, h6 { font-weight: 600; color: var(--bs-dark); }
 #sidebar .sidebar-header h3 { color: var(--bs-primary); font-weight: 700; font-size: 1.25rem; }
 
 #sidebar ul li a {
-    padding: 10px 20px; /* [DIHALUSKAN] Padding vertikal dikurangi */
-    font-size: 0.95rem; /* [DIHALUSKAN] Teks menu lebih kecil */
+    padding: 10px 20px;
+    font-size: 0.95rem;
     font-weight: 500;
     display: flex;
     align-items: center;
@@ -67,14 +67,15 @@ h1, h2, h3, h4, h5, h6 { font-weight: 600; color: var(--bs-dark); }
     border-left: 4px solid transparent;
     transition: all 0.2s ease-in-out;
     white-space: nowrap;
+    position: relative; /* <-- [PERBAIKAN KUNCI] Tambahkan baris ini */
 }
-#sidebar.active ul li a { padding: 12px 10px; justify-content: center; } /* [DIHALUSKAN] Padding disesuaikan */
+#sidebar.active ul li a { padding: 12px 10px; justify-content: center; }
 
 #sidebar .nav-link i {
-    font-size: 1.1rem; /* [DIHALUSKAN] Ikon sedikit lebih kecil */
+    font-size: 1.1rem; /* Ikon sedikit lebih kecil */
     width: 20px; /* Memberi lebar tetap agar rapi */
     text-align: center;
-    margin-right: 15px; /* [DIHALUSKAN] Jarak disesuaikan */
+    margin-right: 15px; /* Jarak disesuaikan */
 }
 #sidebar.active .nav-link i { margin-right: 0; }
 
@@ -95,6 +96,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 600; color: var(--bs-dark); }
     opacity: 1;
     transition: opacity 0.2s ease, margin-left 0.3s ease;
 }
+
 #sidebar.active .sidebar-text {
     opacity: 0;
     width: 0;
@@ -102,6 +104,50 @@ h1, h2, h3, h4, h5, h6 { font-weight: 600; color: var(--bs-dark); }
     visibility: hidden;
 }
 
+#sidebar ul li a.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    transition: transform 0.2s ease;
+    font-family: 'Font Awesome 6 Free'; /* Menggunakan Font Awesome */
+    font-weight: 900;
+    content: '\f078'; /* Kode unicode untuk ikon panah ke bawah */
+}
+#sidebar ul li a.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px; /* Jarak dari sisi kanan link */
+    transform: translateY(-50%);
+    transition: transform 0.2s ease;
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    content: '\f078'; /* Kode ikon panah ke bawah */
+    font-size: 0.7rem;
+}
+
+#sidebar.active ul li a.dropdown-toggle::after {
+    display: none; /* Sembunyikan panah saat sidebar mini */
+}
+
+#sidebar ul li a[aria-expanded="true"]::after {
+    transform: translateY(-50%) rotate(180deg); /* Panah berputar saat dropdown terbuka */
+}
+
+#sidebar ul ul {
+    background: #fafafa; /* Latar sedikit berbeda untuk sub-menu */
+    padding-left: 20px; /* Indentasi sub-menu */
+}
+
+#sidebar ul ul a {
+    font-size: 0.9rem; /* Teks sub-menu sedikit lebih kecil */
+    padding-left: 30px !important;
+}
+#sidebar ul ul a i {
+    font-size: 1rem; /* Ikon sub-menu juga sedikit lebih kecil */
+}
 
 /* =================================================================
    3. MAIN CONTENT AREA
@@ -173,7 +219,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 600; color: var(--bs-dark); }
 .bg-info { background-color: var(--bs-info) !important; }
 
 /* =================================================================
-   Sisa Styles (Card, Table, Button, etc.) - Dengan sedikit penghalusan
+   Sisa Styles (Card, Table, Button, etc.)
    ================================================================= */
 .card { border: none; border-radius: var(--bs-border-radius); box-shadow: 0 4px 25px rgba(0,0,0,0.07); margin-bottom: 1.5rem; }
 .card-header { background-color: #ffffff; border-bottom: 1px solid var(--bs-border-color); padding: 1rem 1.25rem; font-weight: 600; color: var(--bs-dark); }
@@ -186,9 +232,8 @@ table.dataTable > tbody > tr > td { border: none; }
 .btn-primary { background-color: var(--bs-primary); border-color: var(--bs-primary); box-shadow: 0 2px 8px rgba(74, 105, 189, 0.3); }
 .modal-content { border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 
-
 /* =================================================================
-   RESPONSIVE DESIGN (Mobile & Tablet) - Tidak Berubah
+   RESPONSIVE DESIGN (Mobile & Tablet)
    ================================================================= */
 .sidebar-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;

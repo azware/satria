@@ -88,21 +88,42 @@ $(document).ready(function () {
 
   // Handler utama untuk SEMUA ajax-link (tidak perlu diubah)
   $(document).on('click', '.ajax-link', function(e) {
-      e.preventDefault();
-      
-      // [PENTING] Hentikan event agar tidak "bubble up" ke .small-box dan menyebabkan klik ganda
-      e.stopPropagation(); 
+    e.preventDefault();
+    e.stopPropagation(); 
 
-      const url = $(this).data('url');
+    const url = $(this).data('url');
 
-      if (url) {
-          App.loadContent(url);
-          $('#sidebar ul li').removeClass('active');
-          $(`#sidebar a[data-url='${url}']`).closest('li').addClass('active');
-          if ($(window).width() <= 768 && $('#sidebar').hasClass('active')) {
-              $('#sidebar').removeClass('active');
-          }
-      }
+    if (url) {
+        // 1. Muat konten
+        App.loadContent(url);
+
+        // 2. [DIUBAH] Logika cerdas untuk menandai menu aktif (termasuk parent)
+        const clickedLink = $(this);
+
+        // Hapus semua status aktif dari semua link
+        $('#sidebar .nav-link').removeClass('active-link');
+        $('#sidebar ul li').removeClass('active');
+
+        // Tambahkan kelas aktif ke link yang diklik
+        clickedLink.addClass('active-link');
+        clickedLink.closest('li').addClass('active');
+
+        // Cek apakah link yang diklik ada di dalam sub-menu
+        const parentSubmenu = clickedLink.closest('.collapse');
+        if (parentSubmenu.length > 0) {
+            // Jika ya, buka sub-menu jika belum terbuka
+            if (!parentSubmenu.hasClass('show')) {
+                parentSubmenu.collapse('show');
+            }
+            // Dan tambahkan kelas 'active' juga ke parent dropdown-nya
+            parentSubmenu.prev('a.dropdown-toggle').addClass('active-link');
+        }
+
+        // 3. Sembunyikan sidebar setelah klik di mode mobile
+        if ($(window).width() <= 768 && $('#sidebar').hasClass('active')) {
+            $('#sidebar').removeClass('active');
+        }
+    }
   });
 
 });

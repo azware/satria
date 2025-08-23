@@ -14,4 +14,4 @@
 </script>
 
 <!-- Custom App Script -->
-<script src="<?= base_url('assets/js/app.js') ?>"></script>
+<script src="<?= base_url('assets/js/app.js?v=1.9') ?>"></script>
