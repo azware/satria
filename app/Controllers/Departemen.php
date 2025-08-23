@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\DepartemenModel;
+use App\Models\DivisiModel; // [BARU] Impor model Divisi
 use CodeIgniter\API\ResponseTrait;
 
 class Departemen extends BaseController
@@ -10,45 +11,47 @@ class Departemen extends BaseController
     use ResponseTrait;
 
     protected $departemenModel;
+    protected $divisiModel; // [BARU] Deklarasikan properti
 
     public function __construct()
     {
         $this->departemenModel = new DepartemenModel();
+        $this->divisiModel = new DivisiModel(); // [BARU] Inisialisasi model
     }
 
-    // Method untuk menampilkan view utama
     public function index()
     {
-        return view('departemen/index');
+        // [DIUBAH] Kirim data divisi ke view untuk mengisi dropdown
+        $data['divisi'] = $this->divisiModel->findAll();
+        return view('departemen/index', $data);
     }
 
-    // Method untuk mengambil data bagi DataTables
     public function ajax_list()
     {
         if ($this->request->isAJAX()) {
-            $data = $this->departemenModel->findAll();
+            // [DIUBAH] Gunakan fungsi baru yang sudah di-JOIN
+            $data = $this->departemenModel->getDepartemenWithDetails();
             return $this->response->setJSON(['data' => $data]);
         }
     }
 
-    // Method untuk mengambil data tunggal untuk form edit
     public function ajax_edit($id)
     {
         if ($this->request->isAJAX()) {
+            // Kita hanya perlu data departemen, tidak perlu join di sini
             $data = $this->departemenModel->find($id);
             return $this->respond($data);
         }
     }
 
-    // Method untuk menyimpan data (baik tambah maupun edit)
     public function ajax_save()
     {
         if ($this->request->isAJAX()) {
             $validation = \Config\Services::validation();
             
-            // Aturan validasi
             $rules = [
                 'nama_departemen' => 'required|is_unique[departemen.nama_departemen,id,{id}]',
+                'divisi_id' => 'required|integer', // [BARU] Validasi untuk divisi_id
             ];
 
             if (!$this->validate($rules)) {
@@ -58,11 +61,12 @@ class Departemen extends BaseController
             $id = $this->request->getPost('id');
             $data = [
                 'nama_departemen' => $this->request->getPost('nama_departemen'),
+                'divisi_id' => $this->request->getPost('divisi_id'), // [BARU] Ambil data divisi_id
             ];
             
-            if (empty($id)) { // Jika ID kosong, berarti data baru
+            if (empty($id)) {
                 $this->departemenModel->insert($data);
-            } else { // Jika ID ada, berarti update data
+            } else {
                 $this->departemenModel->update($id, $data);
             }
 
@@ -70,10 +74,10 @@ class Departemen extends BaseController
         }
     }
 
-    // Method untuk menghapus data
     public function ajax_delete($id)
     {
         if ($this->request->isAJAX()) {
+            // (Opsional) Tambahkan pengecekan apakah ada pegawai di departemen ini sebelum dihapus
             if ($this->departemenModel->delete($id)) {
                 return $this->respondDeleted(['status' => 'success', 'message' => 'Data berhasil dihapus.']);
             }
