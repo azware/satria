@@ -24,11 +24,20 @@ $routes->group('pegawai', function ($routes) {
 
 // Routes untuk Departemen
 $routes->group('departemen', function ($routes) {
-    $routes->get('/', 'Departemen::index');
-    $routes->get('ajax_list', 'Departemen::ajax_list');
-    $routes->get('ajax_edit/(:num)', 'Departemen::ajax_edit/$1');
-    $routes->post('ajax_save', 'Departemen::ajax_save');
-    $routes->delete('ajax_delete/(:num)', 'Departemen::ajax_delete/$1');
+    $routes->get('/', 'Departemen::index'); // <-- Untuk menampilkan halaman utama
+    $routes->get('ajax_list', 'Departemen::ajax_list'); // <-- Untuk mengambil data tabel
+    $routes->get('ajax_edit/(:num)', 'Departemen::ajax_edit/$1'); // <-- Untuk mengambil data edit
+    $routes->post('ajax_save', 'Departemen::ajax_save'); // <-- Untuk menyimpan data (tambah/edit)
+    $routes->delete('ajax_delete/(:num)', 'Departemen::ajax_delete/$1'); // <-- Untuk menghapus data
+});
+
+// Routes untuk Divisi
+$routes->group('divisi', function ($routes) {
+    $routes->get('/', 'Divisi::index');
+    $routes->get('ajax_list', 'Divisi::ajax_list');
+    $routes->get('ajax_edit/(:num)', 'Divisi::ajax_edit/$1');
+    $routes->post('ajax_save', 'Divisi::ajax_save');
+    $routes->delete('ajax_delete/(:num)', 'Divisi::ajax_delete/$1');
 });
 
 // Routes untuk Jabatan
