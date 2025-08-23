@@ -3,76 +3,62 @@
 namespace App\Controllers;
 
 use CodeIgniter\Controller;
-use CodeIgniter\HTTP\CLIRequest; // [BARU] Tambahkan ini
-use CodeIgniter\HTTP\IncomingRequest; // [BARU] Ganti RequestInterface dengan kelas yang lebih spesifik
+use CodeIgniter\HTTP\CLIRequest;
+use CodeIgniter\HTTP\IncomingRequest;
+use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\Models\UserModel; // [PENTING] Impor UserModel
 
-/**
- * BaseController provides a convenient place for loading components
- * and performing functions that are needed by all your controllers.
- *
- * Extend this class in any new controllers:
- * ```
- *     class Home extends BaseController
- * ```
- *
- * For security, be sure to declare any new methods as protected or private.
- */
 abstract class BaseController extends Controller
 {
-    /**
-     * Be sure to declare properties for any property fetch you initialized.
-     * The creation of dynamic property is deprecated in PHP 8.2.
-     */
-
-    // [BARU] Deklarasikan properti yang akan kita gunakan
+    protected $helpers = [];
     protected $session;
-    protected $db;
 
     /**
-     * @param IncomingRequest|CLIRequest $request
+     * @var \CodeIgniter\HTTP\IncomingRequest|\CodeIgniter\HTTP\CLIRequest
      */
+    protected $request;
+
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
-        // Load here all helpers you want to be available in your controllers that extend BaseController.
-        // Caution: Do not put the this below the parent::initController() call below.
-        // $this->helpers = ['form', 'url'];
-
-        // Caution: Do not edit this line.
         parent::initController($request, $response, $logger);
-
-        // Preload any models, libraries, etc, here.
         
-        // [BARU] Inisialisasi service session dan koneksi database
-        // Cara ini lebih disukai daripada memanggilnya secara global.
-        $this->session = service('session');
-        $this->db = service('database');
-
-        // [BARU] Jalankan fungsi untuk mengatur variabel user di database
-        // Kita letakkan di sini agar dieksekusi pada setiap request.
+        $this->session = \Config\Services::session();
         $this->setDatabaseUser();
     }
 
     /**
-     * [BARU] Method untuk mengatur variabel sesi di level database.
-     * Dibuat 'protected' agar hanya bisa diakses oleh controller ini dan turunannya.
+     * Method untuk mengatur variabel sesi di level database.
+     * Versi baru ini menggunakan koneksi dari model untuk stabilitas.
      *
      * @return void
      */
     protected function setDatabaseUser(): void
     {
-        // Cek apakah ada 'user_id' di dalam data sesi. 
-        // Gantilah 'user_id' dengan nama key sesi Anda yang sebenarnya saat login.
-        $loggedInUserId = $this->session->get('user_id');
+        try {
+            // [PERBAIKAN KUNCI]
+            // 1. Buat instance dari UserModel (atau model apa pun yang sudah ada).
+            //    Saat model dibuat, CodeIgniter secara otomatis akan memberinya
+            //    koneksi database yang valid.
+            $userModel = new UserModel();
 
-        if ($loggedInUserId) {
-            // Jika ada user yang login, kirim perintah SET ke database
-            $this->db->query("SET @current_user_id = ?", [$loggedInUserId]);
-        } else {
-            // Jika tidak ada user yang login (misalnya, cron job atau akses publik),
-            // atur variabelnya menjadi NULL.
-            $this->db->query("SET @current_user_id = NULL");
+            // 2. "Pinjam" objek koneksi database dari model tersebut.
+            $db = $userModel->db;
+
+            // 3. Ambil user_id dari sesi.
+            $loggedInUserId = $this->session->get('user_id');
+
+            // 4. Jalankan query seperti biasa.
+            if ($loggedInUserId) {
+                $db->query("SET @current_user_id = ?", [$loggedInUserId]);
+            } else {
+                $db->query("SET @current_user_id = NULL");
+            }
+        } catch (\Throwable $e) {
+            // Jika terjadi error apa pun (misalnya, koneksi DB tetap gagal),
+            // catat ke log agar tidak menyebabkan halaman putih/crash.
+            log_message('error', 'Gagal mengatur database user: ' . $e->getMessage());
         }
     }
 }
