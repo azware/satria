@@ -1,0 +1,29 @@
+# Direktori cache framework
+/public/cache/
+
+# Direktori log aplikasi
+/app/logs/
+
+# Direktori user files (jika menggunakan User Files library)
+/public/user_files/
+
+# File-file dari vendor (jika menggunakan Composer)
+/vendor/
+
+# Direktori temporary
+/public/temp/
+
+# File konfigurasi lokal (jika ada)
+.env
+
+# Cache CI4
+/cache/
+
+# Log CI4
+/writable/logs/
+
+# Session CI4
+/writable/session/
+
+# Temporary CI4
+/writable/temp/
